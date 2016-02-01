@@ -1,0 +1,9 @@
+---
+- include: mysql.yml
+- include: postfix.yml
+- include: courier.yml
+- include: amavisd.yml
+- include: spamassassin.yml
+- include: clamav.yml
+- include: postgrey.yml
+- include: sasl.yml

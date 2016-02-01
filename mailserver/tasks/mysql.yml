@@ -1,0 +1,9 @@
+---
+- name: Copy the tables.sql file
+  copy: src=tables.sql dest=/tmp/tables.sql
+
+- name: Create MySQL tables
+  mysql_db: state=import name={{ postfix_sql_dbname }} target=/tmp/tables.sql
+
+- name: Remove the tables.sql file
+  file: path=/tmp/tables.sql state=absent

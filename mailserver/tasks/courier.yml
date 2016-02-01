@@ -1,0 +1,22 @@
+---
+- name: Install courier
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - courier-base
+    - courier-authdaemon
+    - courier-authlib-mysql
+    - courier-imap
+    - courier-imap-ssl
+    - courier-ssl
+
+- name: Install the auth configs
+  template: src=courier_{{ item }}.j2 dest=/etc/courier/{{ item }}
+  with_items:
+    - authdaemonrc
+    - authmysqlrc
+  notify: Restart courier
+
+- name: Require TLS
+  replace: dest=/etc/courier/imapd-ssl regexp="^IMAP_TLS_REQUIRED=.*$" replace="IMAP_TLS_REQUIRED=1"
+  when: courier_require_tls
+  notify: Restart courier

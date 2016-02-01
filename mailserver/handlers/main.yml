@@ -1,0 +1,22 @@
+---
+- name: Restart postfix
+  service: name=postfix state=restarted
+
+- name: Reload postfix
+  service: name=postfix state=reloaded
+
+- name: Restart saslauthd
+  service: name=saslauthd state=restarted
+
+- name: Restart courier
+  service: name={{ item }} state=restarted
+  with_items:
+    - courier-authdaemon
+    - courier-imap
+    - courier-imap-ssl
+
+- name: Restart ClamAV
+  service: name={{ item }} state=restarted
+  with_items:
+    - clamav-freshclam
+    - clamav-daemon

@@ -1,0 +1,6 @@
+---
+- name: Install Postgrey
+  apt: pkg=postgrey state=installed update_cache=yes
+
+- name: Tweak Postgrey opts
+  replace: dest=/etc/default/postgrey regexp="^POSTGREY_OPTS=\".*\"" replace="POSTGREY_OPTS=\"--inet=10023 --max-age=365\""

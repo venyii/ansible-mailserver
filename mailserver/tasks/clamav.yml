@@ -1,0 +1,20 @@
+---
+- name: Install ClamAV
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - clamav
+    - clamav-base
+    - libclamav6
+    - clamav-daemon
+    - clamav-freshclam
+
+- name: Add the clamav user to the amavis group
+  user: name=clamav group=amavis append=yes
+
+- name: Set the LocalSocketGroup to amavis (prevents 'ERROR Failed to change socket ownership to group clamav')
+  replace: dest=/etc/clamav/clamd.conf regexp="^LocalSocketGroup clamav" replace="LocalSocketGroup amavis"
+  notify: Restart ClamAV
+
+- name: Change daily update rate
+  replace: dest=/etc/clamav/freshclam.conf regexp="^Checks \d+" replace="Checks {{ clamav_update_rate|int }}"
+  notify: Restart ClamAV

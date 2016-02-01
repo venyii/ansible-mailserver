@@ -1,0 +1,34 @@
+---
+- name: Install postfix
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - postfix
+    - postfix-mysql
+
+- name: Set mail server name
+  copy: content="{{ mail_name }}" dest=/etc/mailname
+
+- name: Install the postfix configs
+  template: src=postfix_{{ item }}.j2 dest=/etc/postfix/{{ item }}
+  with_items:
+    - main.cf
+    - master.cf
+    - mysql_mailbox.cf
+    - mysql_domains.cf
+    - mysql_alias.cf
+  notify: Reload postfix
+
+- name: Copy the postfix aliases
+  copy: src=/etc/aliases dest=/etc/postfix/aliases
+
+- name: Run postalias
+  command: postalias /etc/postfix/aliases
+
+- name: Create the mail group
+  group: name={{ mail_group }} gid=5000 system=yes
+
+- name: Create the mail user
+  user: name={{ mail_user }} uid=5000 group={{ mail_group }} system=yes
+
+- name: Create the mail directory
+  file: path={{ mail_directory }} state=directory owner={{ mail_user }} group={{ mail_group }} recurse=yes

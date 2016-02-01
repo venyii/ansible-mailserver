@@ -1,0 +1,10 @@
+---
+- name: Install amavisd
+  apt: pkg=amavisd-new state=installed update_cache=yes
+
+- name: Install the amavisd configs
+  template: src=amavisd_{{ item }}.j2 dest=/etc/amavis/conf.d/{{ item }}
+  with_items:
+    - 15-content_filter_mode
+    - 50-user
+  notify: Restart postfix

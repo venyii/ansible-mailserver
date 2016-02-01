@@ -1,0 +1,11 @@
+pwcheck_method: saslauthd
+mech_list: plain login cram-md5 digest-md5
+log_level: 7
+allow_plaintext: true
+auxprop_plugin: sql
+sql_engine: mysql
+sql_hostnames: 127.0.0.1
+sql_user: {{ postfix_sql_user }}
+sql_passwd: {{ postfix_sql_password }}
+sql_database: {{ postfix_sql_dbname }}
+sql_select: select crypt from users where id='%u@%r' and enabled = 1

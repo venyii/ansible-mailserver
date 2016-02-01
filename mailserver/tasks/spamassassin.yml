@@ -1,0 +1,15 @@
+---
+- name: Install SpamAssassin
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - spamassassin
+    - spamc
+
+- name: Enable SpamAssassin
+  replace: dest=/etc/default/spamassassin regexp="^ENABLED=[0|1]" replace="ENABLED=1"
+
+- name: Enable Bayes
+  replace: dest=/etc/spamassassin/local.cf regexp="^# {{ item }} 1" replace="{{ item }} 1"
+  with_items:
+    - use_bayes
+    - bayes_auto_learn
