@@ -11,5 +11,7 @@ Don't forget to change the sensitive default values in `data.sql` and `tables.sq
 ToDo:
 * [TLS](http://flurdy.com/docs/postfix/#config-secure-crypt) in Postfix & Courier
 
+_This role has a dependency on the [Ansible MySQL](https://github.com/geerlingguy/ansible-role-mysql) role by @geerlingguy._
+
 ## mailserver-roundcube
 tbd
